@@ -53,7 +53,12 @@ class Slim_Http_Util {
      * @return  array|string
      */
     public static function stripSlashesIfMagicQuotes( $rawData, $overrideStripSlashes = null ) {
-        $strip = is_null($overrideStripSlashes) ? get_magic_quotes_gpc() : $overrideStripSlashes;
+        if (PHP_VERSION_ID >= 70400) {
+            $strip = is_null($overrideStripSlashes) ? false : $overrideStripSlashes;
+        } else {
+             $strip = is_null($overrideStripSlashes) ? get_magic_quotes_gpc() : $overrideStripSlashes;
+        }
+
         if ( $strip ) {
             return self::_stripSlashes($rawData);
         } else {
